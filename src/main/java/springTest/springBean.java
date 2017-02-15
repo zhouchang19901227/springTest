@@ -20,7 +20,7 @@ public class springBean {
 	public springBean()
 	{
 		savePerson();
-		logger.info("666666656");
+		logger.info("222222222222222222222");
        System.out.println("testBean");
 	}
 	public void transfer(final String out, final String in, final Double money) {
