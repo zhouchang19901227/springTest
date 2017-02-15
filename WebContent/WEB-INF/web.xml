@@ -1,0 +1,43 @@
+<web-app id="WebApp_ID" version="3.0"
+	xmlns="http://java.sun.com/xml/ns/javaee"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance http://www.springmodules.org/schema/cache/springmodules-cache.xsd http://www.springmodules.org/schema/cache/springmodules-ehcache.xsd"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_3_0.xsd">
+	<display-name>springtest</display-name>
+	<description>test</description>
+	<context-param>
+		<param-name>contextConfigLocation</param-name>
+		<param-value>classpath:spring.xml,
+		 classpath:spring-hibernate.xml</param-value>		
+	</context-param>
+	<servlet>
+		<servlet-name>SpringMVC</servlet-name>
+		<servlet-class>org.springframework.web.servlet.DispatcherServlet</servlet-class>
+		<!-- 通过初始化参数指定springmvc配置文件的位置 -->
+		<init-param>
+			<param-name>contextConfigLocation</param-name>
+			<param-value>classpath:springmvc.xml</param-value>
+		</init-param>
+	</servlet>
+	  <servlet-mapping>
+  	<servlet-name>SpringMVC</servlet-name>
+  	<url-pattern>/</url-pattern>
+  </servlet-mapping>
+		<context-param> 
+		<param-name>log4jConfigLocation</param-name> 
+		<param-value>WEB-INF/classes/log4j.properties</param-value> 
+	</context-param> 
+	<!-- Spring刷新Log4j配置文件变动的间隔,单位为毫秒 -->
+	<context-param> 
+		<param-name>log4jRefreshInterval</param-name> 
+		<param-value>10000</param-value> 
+	</context-param> 
+	<!-- 配置监听器,用于初始化 -->
+	<listener>
+		<listener-class>org.springframework.web.util.Log4jConfigListener</listener-class>
+	</listener>
+	<listener>
+		<listener-class>org.springframework.web.context.ContextLoaderListener</listener-class>
+	</listener>
+	<!-- <servlet> <servlet-name>context</servlet-name> <servlet-class>org.springframework.web.context.ContextLoaderServlet</servlet-class> 
+		<load-on-startup>1</load-on-startup> </servlet> -->
+</web-app>
