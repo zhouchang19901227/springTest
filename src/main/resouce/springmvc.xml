@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans
+    xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:aop="http://www.springframework.org/schema/aop"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+         http://www.springframework.org/schema/beans/spring-beans-4.2.xsd
+         http://www.springframework.org/schema/context
+         http://www.springframework.org/schema/context/spring-context-4.2.xsd
+         http://www.springframework.org/schema/tx
+     	 http://www.springframework.org/schema/tx/spring-tx-4.2.xsd
+         http://www.springframework.org/schema/aop 
+         http://www.springframework.org/schema/aop/spring-aop-4.2.xsd
+		 http://www.springframework.org/schema/mvc 
+		 http://www.springframework.org/schema/mvc/spring-mvc-4.2.xsd">
+	
+		<!-- <mvc:annotation-driven />标签能自动配置，但会导致丧失可控性所以不建议用 -->
+	<!-- 这两个类用来启动基于Spring MVC的注解功能，将控制器与方法映射加入到容器中 -->
+    <aop:aspectj-autoproxy/>  
+   <context:component-scan base-package="springmvcControl,SpringImplService" />
+   
+       <bean  
+        class="org.springframework.web.servlet.mvc.annotation.AnnotationMethodHandlerAdapter">  
+        <property name="webBindingInitializer">  
+            <bean class="springConvert.DateConverter" />  
+          <!--    <bean class="org.springframework.web.bind.support.ConfigurableWebBindingInitializer">  
+   			<property name="conversionService" ref="conversionService" />  
+   			<property name="validator" ref="validator" />  
+ 		 </bean> -->
+        </property>  
+        <property name="messageConverters">
+			<list>
+				<ref bean="mappingJacksonHttpMessageConverter" />
+			</list>
+		</property>
+    </bean>
+    
+<!--     <bean id="conversionService" class="org.springframework.format.support.FormattingConversionServiceFactoryBean">    
+        <property name="converters">    
+            <list>    
+                <bean class="com.xxx.ark.core.web.DateConverter" />    
+            </list>    
+        </property>    
+    </bean>   -->
+    <!-- 开启json支持 -->
+	<bean id="mappingJacksonHttpMessageConverter"
+		class="org.springframework.http.converter.json.MappingJacksonHttpMessageConverter">
+		<property name="supportedMediaTypes">
+			<list>
+				<value>application/json;charset=UTF-8</value>
+			</list>
+		</property>
+	</bean>
+		<bean
+		class="org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping" />
+	
+    <!--     <bean name="/hello" class="springmvcControl.HelloController"></bean> -->
+	<!-- 视图解析器 -->
+	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
+		<!-- 前缀 /WEB-INF/jsps/home.jsp-->
+		<property name="prefix" value="/page/"></property>
+		<!-- 后缀 -->
+		<property name="suffix" value=".jsp"></property>
+	</bean>
+	
+		<!-- 静态资源访问（不拦截此目录下的东西的访问） -->
+	<mvc:resources location="/content/" mapping="/content/**" />
+	<mvc:resources location="/upload/" mapping="/upload/**" />
+
+	<!-- 默认首页 -->
+	<mvc:view-controller path="/" view-name="redirect:/index" />
+
+	<mvc:interceptors>
+		<!--权限验证-->
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />			
+			<mvc:exclude-mapping path="/transfinance/credit"/>
+			<mvc:exclude-mapping path="/transfinance/data" />
+			<bean class="init.AuthorityInterceptor"></bean>
+		</mvc:interceptor>
+		<!--参数校验-->
+		<mvc:interceptor>
+			<mvc:mapping path="/**" />
+			<bean class="init.RequestInterceptor"></bean>
+		</mvc:interceptor>
+	</mvc:interceptors>
+
+</beans>
