@@ -15,12 +15,12 @@ public class springBean {
 	public void savePerson() {
 	
 	}
-	// 日志对象
+	// 锟斤拷志锟斤拷锟斤拷
 	private static final Logger logger = LoggerFactory.getLogger(springBean.class);
 	public springBean()
 	{
 		savePerson();
-		logger.info("ffffffffffffffffffffffff");
+		logger.info("666666656");
        System.out.println("testBean");
 	}
 	public void transfer(final String out, final String in, final Double money) {
